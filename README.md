@@ -1,4 +1,4 @@
-# Online_Video2Text
+# Web_Video2Text
 Input a video web page url (so far only works for BiliBili), transcribe the video without downloading it.
 
 * Uses *Speechmatics* to transcribe audio files from online urls. To make it work, one have to register an account and generate an API key. So far this is free. 
