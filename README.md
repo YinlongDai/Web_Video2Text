@@ -16,11 +16,13 @@ AUTH_TOKEN = 'Get your token from https://portal.speechmatics.com/home/'
 LANGUAGE = "cmn"
 ```
 Language can be changed. Check https://docs.speechmatics.com/on-prem/container/lang-id-container for supported languages. 
+<br>
 
 **For Youtube**
 
 Get *yt-dlp* from https://github.com/yt-dlp/yt-dlp. Guides for installation could be found on the same page, no more operation needed.
 This is only for fetching Youtube video urls. 
+<br>
 
 **For BiliBili**
 
@@ -37,5 +39,5 @@ python video2text_public.py
 video_url: 'your url'
 ```
 
-The transcription will appeaar in terminal.
+The transcription will appear in terminal.
 ![output](img/output.png)
