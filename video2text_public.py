@@ -46,7 +46,6 @@ def get_video_data(html_data):
 
 web_url = input("video_url:")
 html_data = send_request(web_url).text
-print('no problem')
 video_data = get_video_data(html_data)
 while (video_data[1][0:27]!="https://upos-hz-mirrorakam." or video_data[2][0:27]!="https://upos-hz-mirrorakam."):
     video_data = get_video_data(html_data)
