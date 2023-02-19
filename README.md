@@ -17,14 +17,14 @@ LANGUAGE = "cmn"
 ```
 Language can be changed. Check https://docs.speechmatics.com/on-prem/container/lang-id-container for supported languages. 
 <br>
-
-**For Youtube**
+<br>
+**For Youtube:**
 
 Get *yt-dlp* from https://github.com/yt-dlp/yt-dlp. Guides for installation could be found on the same page, no more operation needed.
 This is only for fetching Youtube video urls. 
 <br>
-
-**For BiliBili**
+<br>
+**For BiliBili:**
 
 在视频网页，查看网页代码F12 -> Network -> Name 并复制'user_agent'到'headers':
 ```python
