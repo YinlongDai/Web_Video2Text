@@ -26,3 +26,4 @@ video_url: 'your url'
 ```
 
 The transcription will appeaar in terminal.
+![output](img/output.png)
