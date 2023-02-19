@@ -7,21 +7,21 @@ Input a video web page url (so far only works for BiliBili), transcribe the vide
 It only supports parsing videos from *BiliBili*. Some amendments are made to the original code since BiliBili changed their web code. 
 
 从F12复制'user_agent'到'headers':
-、、、
+'''
 headers = {
     'user-agent': 'video_web -> F12 -> Network -> Name'}
-、、、
+'''
 
 在*Speechmatics*官网注册并免费生成API key， 复制在'AUTH_TOKEN'，可以选择调整语言:
-、、、
+'''
 AUTH_TOKEN = 'Get your token from https://portal.speechmatics.com/home/'
 LANGUAGE = "cmn"
-、、、
+'''
 
 完成后直接运行并输入视频网址，仅支持B站视频：
-、、、
+'''
 python video2text_public.py
 video_url: 'your url'
-、、、
+'''
 
 The transcription will appeaar in terminal.
