@@ -6,10 +6,13 @@ import json
 #for parse video
 import speechmatics
 from urllib.request import urlopen
+import subprocess
 
+#headers are only for BiliBili video url fetching
 headers = {
     'user-agent': 'video_web -> F12 -> Network -> Name'}
 
+#Functions for fetching BiliBili video url
 def send_request(url):
     response = requests.get(url=url, headers=headers)
     return response
@@ -44,16 +47,32 @@ def get_video_data(html_data):
     video_data = [title, audio_url, video_url]
     return video_data
 
+#Input the webpage url
 web_url = input("video_url:")
-html_data = send_request(web_url).text
-video_data = get_video_data(html_data)
-while (video_data[1][0:27]!="https://upos-hz-mirrorakam." or video_data[2][0:27]!="https://upos-hz-mirrorakam."):
-    video_data = get_video_data(html_data)
 
-print('解析到的音频地址:', video_data[1])
-print('解析到的视频地址:', video_data[2])
+#check if the video if from Youtube or BiliBili:
+if (web_url[0:23] == "https://www.youtube.com"):
+    #run Youtuber subprocess
+    f = open("youtuber_url.txt", "w")
+    #fetch Youtube video url
+    subprocess.call(['yt-dlp', '--skip-download','--get-url',web_url],stdout=f)
+    f.close()
+    f = open("youtuber_url.txt", "r")
+    video_data  = f.readlines()
+    print('解析到的音频地址:', video_data[1])
+    f.close()
+elif (web_url[0:24] == "https://www.bilibili.com"):
+    html_data = send_request(web_url).text
+    video_data = get_video_data(html_data)\
+    #We have to keep fetching if the url does not work
+    while (video_data[1][0:27]!="https://upos-hz-mirrorakam." or video_data[2][0:27]!="https://upos-hz-mirrorakam."):
+        video_data = get_video_data(html_data)
+    print('解析到的音频地址:', video_data[1])
+    print('解析到的视频地址:', video_data[2])
+else:
+    print("Error: URL not supported.")
 
-#your own token
+
 AUTH_TOKEN = 'Get your token from https://portal.speechmatics.com/home/'
 LANGUAGE = "cmn"
 CONNECTION_URL = f"wss://eu2.rt.speechmatics.com/v2/{LANGUAGE}"
