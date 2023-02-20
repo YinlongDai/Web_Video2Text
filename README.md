@@ -35,7 +35,7 @@ headers = {
 
 ### Arguments
 
-**--model:** Choose from the models provided by *Whisper*, tiny/base/small/medium/large. **Notice this downloads any model that is on your local device**, and medium/large models are **huge**. 
+**--model:** Choose from the models provided by *Whisper*, tiny/base/small/medium/large. ***Notice this downloads any model that is not on your local device***, and medium/large models are **huge**. 
 
 **--language:** Choose language to transcribe, by defualt it will be set to 'NULL', which auto-detects language. Check https://github.com/openai/whisper for supported languages.
 
