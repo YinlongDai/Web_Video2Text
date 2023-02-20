@@ -1,12 +1,27 @@
+import whisper
 #for reading url
 import requests
 import re  # 正则表达式
 import pprint
 import json
-#for parse video
-import speechmatics
-from urllib.request import urlopen
+
 import subprocess
+import argparse
+
+MODEL = ['tiny','base', 'small','medium', 'large']
+STAMP = ['true', 'false']
+SAVE = ['true', 'false']
+
+def get_args():
+  parser = argparse.ArgumentParser(description='Choose your parameters') 
+  parser.add_argument('--model', '-m', default='base', type=str, choices=MODEL, help='model size')
+  parser.add_argument('--language', '-l', default= 'NULL', type=str, help='language')
+  parser.add_argument('--save', '-s', default='false', type=str, choices=STAMP, help='save to file')
+  parser.add_argument('--stamp', '-t', default='true', type=str, choices=STAMP, help='show time stamp in file')
+  args = parser.parse_args()
+  return args
+
+args = get_args()
 
 #headers are only for BiliBili video url fetching
 headers = {
@@ -47,6 +62,12 @@ def get_video_data(html_data):
     video_data = [title, audio_url, video_url]
     return video_data
 
+#time parsing
+def convert(seconds):
+    min, sec = divmod(seconds, 60)
+    hour, min = divmod(min, 60)
+    return '%d:%02d:%02d' % (hour, min, sec)
+
 #Input the webpage url
 web_url = input("video_url:")
 
@@ -73,53 +94,39 @@ else:
     print("Error: URL not supported.")
 
 
-AUTH_TOKEN = 'Get your token from https://portal.speechmatics.com/home/'
-LANGUAGE = "cmn"
-CONNECTION_URL = f"wss://eu2.rt.speechmatics.com/v2/{LANGUAGE}"
+#use the models you choose 
+model = whisper.load_model(args.model)
 
-# The raw audio stream will be a few seconds ahead of the radio
-AUDIO_STREAM=video_data[1]  # LBC Radio stream
+audio = whisper.load_audio(video_data[1][:-1])
+audio1 = whisper.pad_or_trim(audio)
 
-response = urlopen(AUDIO_STREAM)
+# make log-Mel spectrogram and move to the same device as the model
+mel = whisper.log_mel_spectrogram(audio1).to(model.device)
 
-# Create a transcription client
-ws = speechmatics.client.WebsocketClient(
-  speechmatics.models.ConnectionSettings(
-    url=CONNECTION_URL,
-    auth_token=AUTH_TOKEN,
-    generate_temp_token=True, # Enterprise customers don't need to provide this parameter
-  )
-)
+if args.language == 'NULL':
+  # detect the spoken language
+  _, probs = model.detect_language(mel)
+  language = f"{max(probs, key=probs.get)}"
+  print("Detected language:",language)
+else:
+  language = args.language
+  print("Transcribe in:"+language)
 
-# Define an event handler to print the partial transcript
-def print_partial_transcript(msg):
-  print(f"(PART) {msg['metadata']['transcript']}")
-
-
-# Define an event handler to print the full transcript
-def print_transcript(msg):
-  print(f"(FULL) {msg['metadata']['transcript']}")
+# decode the audio
+#options = whisper.DecodingOptions()
+#result = whisper.decode(model, mel, options)
+result = model.transcribe(video_data[1][:-1], verbose = True, language = language)
+# print the recognized text
+#have to choose whether to include time stamp
 
 
-# Register the event handler for partial transcript
-ws.add_event_handler(
-  event_name=speechmatics.models.ServerMessageType.AddPartialTranscript,
-  event_handler=print_partial_transcript,
-)
-
-# Register the event handler for full transcript
-ws.add_event_handler(
-  event_name=speechmatics.models.ServerMessageType.AddTranscript,
-  event_handler=print_transcript,
-)
-
-settings = speechmatics.models.AudioSettings()
-
-# Define transcription parameters
-conf = speechmatics.models.TranscriptionConfig(
-  language=LANGUAGE,
-  enable_partials=False,
-)
-
-
-ws.run_synchronously(response, conf, settings)
+if args.save == "true":
+  f = open(result['segments'][0]['text'][:30]+".txt", "w", encoding="utf-8")
+  if args.stamp == "true":
+    for segment in result['segments']:
+      start = convert(segment['start'])
+      end = convert(segment['end'])
+      f.write( '['+start+'-->'+end+']'+segment['text'] +'\n')
+  else: 
+    for segment in result['segmensts']:
+      f.write(segment['text']+ '\n')  
