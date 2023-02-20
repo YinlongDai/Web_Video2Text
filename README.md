@@ -2,7 +2,9 @@
 ## Now supports videos on both Youtube and BiliBili 
 Input a video web page url, transcribe the video without downloading it.
 
-* Uses *Speechmatics* to transcribe audio files from online urls. To make it work, one have to register an account and generate an API key. So far this is free. 
+* No longer using *Speechmatics* to transcribe audio files from online urls, but using *Whisper* from OpenAI as a more convinient way of transcribing.   https://github.com/openai/whisper
+
+* Add serveral easy to access command line arguments. 
 
 * For Youtube videos, *yt-dlp* is used to fetch video urls. More on https://github.com/yt-dlp/yt-dlp. 
 
@@ -10,12 +12,11 @@ Input a video web page url, transcribe the video without downloading it.
 It only supports parsing videos from *BiliBili*. Some amendments are made to the original code since BiliBili changed their web code. 
 
 ### Preparation
-在*Speechmatics*官网注册并免费生成API key， 复制在'AUTH_TOKEN'，可以选择调整语言:
-```python
-AUTH_TOKEN = 'Get your token from https://portal.speechmatics.com/home/'
-LANGUAGE = "cmn"
+根据https://github.com/openai/whisper的指引下载 *Whisper*:
 ```
-Language can be changed. Check https://docs.speechmatics.com/on-prem/container/lang-id-container for supported languages. 
+pip install -U openai-whisper
+```
+ 
 <br>
 <br>
 **For Youtube:**
@@ -32,6 +33,17 @@ headers = {
     'user-agent': 'copy your user-agent here'}
 ```
 以上步骤只需要进行一次。
+
+### Arguments
+
+**--model:** Choose from the models provided by *Whisper*, tiny/base/small/medium/large. **Notice this downloads any model that is on your local device**, and medium/large models are **huge**. 
+
+**--language:** Choose language to transcribe, by defualt it will be set to 'NULL', which auto-detects language. Check https://github.com/openai/whisper for supported languages.
+
+**--save:** Choose whether to save the transcription as a file. It will be saved to the same directory where the code is located. 
+
+**--stamp:** Choose whether to include time stamps in transcribed files.
+
 
 完成后直接运行并输入视频网址:
 ```
