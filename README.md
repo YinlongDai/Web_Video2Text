@@ -12,11 +12,10 @@ Input a video web page url, transcribe the video without downloading it.
 It only supports parsing videos from *BiliBili*. Some amendments are made to the original code since BiliBili changed their web code. 
 
 ### Preparation
-根据https://github.com/openai/whisper的指引下载 *Whisper*:
+根据 https://github.com/openai/whisper 的指引下载 *Whisper*:
 ```
 pip install -U openai-whisper
 ```
- 
 <br>
 <br>
 **For Youtube:**
