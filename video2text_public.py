@@ -130,3 +130,4 @@ if args.save == "true":
   else: 
     for segment in result['segmensts']:
       f.write(segment['text']+ '\n')  
+  f.close()
