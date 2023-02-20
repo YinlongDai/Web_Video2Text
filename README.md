@@ -17,7 +17,6 @@ It only supports parsing videos from *BiliBili*. Some amendments are made to the
 pip install -U openai-whisper
 ```
 <br>
-<br>
 **For Youtube:**
 
 Get *yt-dlp* from https://github.com/yt-dlp/yt-dlp. Guides for installation could be found on the same page, no more operation needed.
