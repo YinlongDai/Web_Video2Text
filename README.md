@@ -52,3 +52,4 @@ video_url: 'your url'
 
 The transcription will appear in terminal.
 ![output](img/output.png)
+有时候抓取b站会很久都没有响应，解决方案是多跑几遍。

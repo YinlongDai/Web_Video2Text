@@ -49,14 +49,16 @@ def get_video_data(html_data):
     # 提取音频的url地址
     audio_url = json_data['data']['dash']['audio'][0]['baseUrl']
     i=1
-    if (audio_url[0:27] != "https://upos-hz-mirrorakam.") & (i<2):
+    if (audio_url[0:27] != "https://upos-hz-mirrorakam.") & (i<3):
         audio_url = json_data['data']['dash']['audio'][i]['baseUrl']
+        i+=1
     
 
     # 提取视频画面的url地址
     video_url = json_data['data']['dash']['video'][0]['baseUrl']
-    if (video_url[0:27] != "https://upos-hz-mirrorakam.") & (i<2):
+    if (video_url[0:27] != "https://upos-hz-mirrorakam.") & (i<3):
         video_url = json_data['data']['dash']['audio'][i]['baseUrl']
+        i+=1
     
 
     video_data = [title, audio_url, video_url]
@@ -86,7 +88,7 @@ elif (web_url[0:24] == "https://www.bilibili.com"):
     html_data = send_request(web_url).text
     video_data = get_video_data(html_data)\
     #We have to keep fetching if the url does not work
-    while (video_data[1][0:27]!="https://upos-hz-mirrorakam." or video_data[2][0:27]!="https://upos-hz-mirrorakam."):
+    while (video_data[1][0:27]!="https://upos-hz-mirrorakam."):
         video_data = get_video_data(html_data)
     print('解析到的音频地址:', video_data[1])
     print('解析到的视频地址:', video_data[2])
